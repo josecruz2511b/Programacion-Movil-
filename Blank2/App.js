@@ -2,9 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
 
-const Texto = () => {
+const Texto = (props) => {
+  const {contenido}=props
   return (
-    <Text>Hola  desde ReacNative</Text>
+    <Text>{contenido}</Text>
   )
 }
 
