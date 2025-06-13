@@ -14,7 +14,9 @@ export default function App() {
     <View style={styles.container}>
 
       <StatusBar style="auto" />
-      <Text>Probando ReacNative</Text>
+      <Texto contenido="hola"></Texto>
+      <Texto contenido="mundo"></Texto>
+      <Texto contenido="Probando ReacNative"></Texto>
       <Texto></Texto>
       <Button title="presioname"></Button>
     </View>
