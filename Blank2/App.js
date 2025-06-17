@@ -1,32 +1,33 @@
-//importaciones
-import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import { Button } from "react-native-web";
+import React, { useState } from "react";
 
-  const Texto = () => {
-    //propiedad contenido que hereda de texto (solo se pueden heredar las propiedasdes, states no).
-    return (
-      <Text> Hola Mundo</Text>
-    );
-
-
-  }
-
-//Main
-export default function App() {
-  const [contenido, setContenido] = useState('Hola  Mundo');
-  const actualizaTexto = () => { setContenido('State Modificado') }
+const Texto = ({ style }) => {
+  const [contenido, setContenido] = useState("Hola Mundo");
+  const actualizarTexto = () => {
+    setContenido("State Modificado");
+  };
   return (
-    //
+    <Text style={[styles.text, style]} onPress={actualizarTexto}>
+      {" "}
+      {contenido}{" "}
+    </Text>
+  );
+};
+
+export default function App() {
+  const [contenido, setContenido] = useState("Aque no me tocas");
+  const actualizarBoton = () => {
+    setContenido("Aplastado");
+  };
+  return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-
-      <Texto></Texto>
-      <Texto></Texto>
-      <Texto></Texto>
-
-      <Button onPress={actualizaTexto} title={contenido} ></Button>
-
+      <Texto style={styles.azul}></Texto>
+      <Texto style={styles.verde}></Texto>
+      <Texto style={styles.morado}></Texto>
+      <Button onPress={actualizarBoton} title={contenido}></Button>
     </View>
   );
 }
@@ -34,8 +35,19 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    justifyContent: "space-evenly",
+    flexDirection: "column",
   },
+  text: {
+    color: "white",
+    fontSize: 28,
+    width: 100,
+    height: 100,
+  },
+  azul: { backgroundColor: "blue" },
+  morado: { backgroundColor: "purple" },
+  verde: { backgroundColor: "green" },
 });
