@@ -1,100 +1,137 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Alert, Platform, Switch, Button } from "react-native";
-import React, { useState } from "react";
+import { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Modal,
+  TextInput,
+  FlatList,
+} from "react-native";
 
-const showAlert = (message) => {
-  if (Platform.OS === 'web') {
-    window.alert(message);
-  } else {
-    Alert.alert('Alerta', message);
-  }
-};
+export default function App() {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [note, setNote] = useState("");
+  const [database, setDatabase] = useState([]);
 
-const App = () => {
-  const [activo, setActivo] = useState(false);
-
-  const cambiarSwitch = () => {
-    setActivo(prev => !prev);
+  const addNote = () => {
+    if (note.trim() !== "") {
+      setDatabase((prev) => [...prev, note]);
+      setNote("");
+      setModalVisible(false);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>React Native Button Test</Text>
-
-      <View style={styles.section}>
-        <Text style={styles.description}>Botón Básico</Text>
-        <Button title="Presióname" onPress={() => showAlert("Botón presionado")} />
+    <View style={{ flex: 1 }}>
+      {/*  Header  */}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Mi app de Notas C:</Text>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.description}>Botón de color</Text>
-        <Button title="Color púrpura" color="purple" onPress={() => showAlert("Botón de color presionado")} />
+      <View style={styles.container}>
+        <FlatList
+          data={database}
+          keyExtractor={(item, index) => index}
+          renderItem={({ item }) => (
+            <View style={styles.nota}>
+              <Text>{item}</Text>
+            </View>
+          )}
+          ListEmptyComponent={<Text>No hay ni una nota :C</Text>}
+        />
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.description}>Botón deshabilitado</Text>
-        <Button title="Deshabilitado" disabled onPress={() => showAlert("No funciona :(")} />
+      <View style={styles.fabButton}>
+        <Button
+          title="Agregar Nota"
+          color="blue"
+          onPress={() => setModalVisible(true)}
+        ></Button>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.description}>Dos botones:</Text>
-        <View style={styles.buttonRow}>
-          <Button title="Izquierda" onPress={() => showAlert("Botón izquierdo")} />
-          <View style={styles.buttonSpacer} />
-          <Button title="Derecha" onPress={() => showAlert("Botón derecho")} />
+      <Modal visible={modalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <Text style={{ marginBottom: 10 }}>Escribe tu nota:</Text>
+            <TextInput
+              value={note}
+              onChangeText={setNote}
+              placeholder="Escribe aquí..."
+              style={styles.input}
+            />
+            <View style={styles.modalBotones}>
+              <Button title="Guardar" color="#4caf50" onPress={addNote} />
+              <Button
+                title="Cancelar"
+                color="#f44336"
+                onPress={() => setModalVisible(false)}
+              />
+            </View>
+          </View>
         </View>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.label}>Activar Característica:</Text>
-        <Switch onValueChange={cambiarSwitch} value={activo} />
-        <Text style={styles.statusText}>Estado actual: {activo ? 'Activado' : 'Desactivado'}</Text>
-      </View>
-
-      <StatusBar style="auto" />
+      </Modal>
     </View>
   );
-};
-
-export default App;
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  header: {
+    width: "100%",
+    paddingTop: 50,
+    paddingBottom: 20,
+    backgroundColor: "blue",
+    alignItems: "center",
   },
-  section: {
-    marginVertical: 10,
-    width: '100%',
-  },
-  description: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  buttonSpacer: {
-    width: 10,
-  },
-  label: {
+  headerText: {
+    color: "#fff",
     fontSize: 20,
-    marginBottom: 10,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
   },
-  statusText: {
-    marginTop: 10,
-    fontSize: 18,
-    color: '#555',
+  fabButton: {
+    position: "absolute",
+    bottom: 60,
+    right: 30,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modal: {
+    width: "90%",
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 8,
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+  modalBotones: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  nota: {
+    backgroundColor: "#e0e0e0",
+    padding: 10,
+    marginHorizontal: 20,
+    marginVertical: 5,
+    borderRadius: 5,
   },
 });
